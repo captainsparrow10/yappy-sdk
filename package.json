@@ -1,0 +1,56 @@
+{
+  "name": "yappy-sdk",
+  "version": "0.1.0",
+  "description": "SDK para integrar Yappy (Banco General Panama) en aplicaciones Node.js y React",
+  "license": "MIT",
+  "keywords": [
+    "yappy",
+    "banco-general",
+    "panama",
+    "payments",
+    "qr",
+    "mobile-payments",
+    "nodejs",
+    "react"
+  ],
+  "main": "./dist/server/index.js",
+  "types": "./dist/server/index.d.ts",
+  "exports": {
+    "./server": {
+      "import": "./dist/server/index.js",
+      "require": "./dist/server/index.cjs",
+      "types": "./dist/server/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react/index.js",
+      "types": "./dist/react/index.d.ts"
+    },
+    "./vanilla": {
+      "import": "./dist/vanilla/index.js",
+      "types": "./dist/vanilla/index.d.ts"
+    }
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "axios": ">=1.0.0",
+    "react": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "axios": {
+      "optional": false
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}
