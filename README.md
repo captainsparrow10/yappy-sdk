@@ -199,23 +199,30 @@ YAPPY_ENVIRONMENT=sandbox                # 'production' (default) or 'sandbox'
 
 ## Yappy Payment Flow
 
-```
-Browser          Your Backend           Yappy API          Customer's Yappy App
-   │                    │                    │                       │
-   │──POST /checkout────►│                    │                       │
-   │                    │──validateMerchant──►│                       │
-   │                    │◄─────── token ──────│                       │
-   │                    │──createOrder───────►│                       │
-   │                    │◄── transactionId ───│                       │
-   │                    │──save to DB         │                       │
-   │◄─── result ────────│                    │                       │
-   │                    │                    │──push notification────►│
-   │                    │                    │                       │──confirm──►
-   │                    │◄───GET /webhook (status=E)─────────────────│
-   │                    │──update order paid  │                       │
-   │──poll /status──────►│                    │                       │
-   │◄── status: paid ───│                    │                       │
-   │──redirect to success                    │                       │
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant Backend as Your Backend
+    participant Yappy as Yappy API
+    participant App as Customer's Yappy App
+
+    Browser->>Backend: POST /checkout
+    Backend->>Yappy: validateMerchant()
+    Yappy-->>Backend: token
+    Backend->>Yappy: createOrder()
+    Yappy-->>Backend: transactionId
+    Backend->>Backend: Save to DB
+    Backend-->>Browser: result
+
+    Yappy->>App: Push notification
+    App->>App: Customer confirms
+
+    Yappy->>Backend: GET /webhook (status=E)
+    Backend->>Backend: Update order → paid
+
+    Browser->>Backend: poll /status
+    Backend-->>Browser: status: paid
+    Browser->>Browser: Redirect to success
 ```
 
 ---
