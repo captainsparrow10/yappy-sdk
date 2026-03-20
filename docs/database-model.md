@@ -8,6 +8,43 @@ Yappy payments require a database table to:
 
 ---
 
+## Order Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> pending : Order created
+    pending --> paid : Webhook status=E (Executed)
+    pending --> failed : Webhook status=R (Rejected)
+    pending --> cancelled : Webhook status=C (Cancelled)
+    pending --> expired : Webhook status=X or 5min timeout
+    paid --> [*]
+    failed --> [*]
+    cancelled --> [*]
+    expired --> [*]
+```
+
+## Entity Relationship Diagram
+
+```mermaid
+erDiagram
+    YappyOrder {
+        uuid id PK
+        string orderId UK "15-char alphanumeric"
+        string transactionId UK "Yappy internal ID"
+        string customerId "Your internal customer ID"
+        string aliasYappy "8-digit phone (optional)"
+        enum status "pending | paid | failed | cancelled | expired"
+        string total "Amount with 2 decimals"
+        jsonb checkoutData "Full checkout state"
+        boolean orderCreated "Fulfilled flag"
+        jsonb orderData "Fulfilled order data"
+        text errorMessage
+        datetime expiresAt "Created + 5 minutes"
+    }
+```
+
+---
+
 ## Schema
 
 ### Sequelize (TypeScript)

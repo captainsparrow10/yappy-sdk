@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "SDK para integrar Yappy (Banco General Panama) en aplicaciones Node.js y React",
   "license": "MIT",
+  "contributors": [
+    { "name": "captainsparrow10", "url": "https://github.com/captainsparrow10" },
+    { "name": "Reddsito", "url": "https://github.com/Reddsito" }
+  ],
   "keywords": [
     "yappy",
     "banco-general",

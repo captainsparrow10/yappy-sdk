@@ -110,12 +110,14 @@ sequenceDiagram
 
 Yappy orders expire **5 minutes** after creation if not confirmed. The expiry lifecycle:
 
-```
-created ──(5 min)──► expired (Yappy server-side)
-                              │
-                              └─► GET /webhook?status=X
-                                  ├─► updateOrderStatus('expired')
-                                  └─► Client polls → status: 'expired'
+```mermaid
+stateDiagram-v2
+    [*] --> created
+    created --> expired : 5 min timeout (Yappy server-side)
+    expired --> webhook_received : GET /webhook?status=X
+    webhook_received --> order_updated : updateOrderStatus('expired')
+    order_updated --> client_notified : Client polls → status: 'expired'
+    client_notified --> [*]
 ```
 
 The client-side timer (`timeLeft`) counts down from 300 seconds and is computed from the `expiresAt` timestamp returned by your backend. If `timeLeft` reaches 0 before the webhook fires, the hook sets status to `'expired'` after a 60-second grace period (in case the webhook is delayed).
